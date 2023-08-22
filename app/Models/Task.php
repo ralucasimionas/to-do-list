@@ -15,4 +15,12 @@ class Task extends Model
     {
         return $this->belongsToMany(TaskList::class, "users_tasks");
     }
+
+    public function recurringTasks()
+    {
+        return $this->belongToMany(
+            RecurringTasks::class,
+            "users_recurring_tasks"
+        );
+    }
 }

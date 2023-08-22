@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\DeadlineReminder;
 use App\Models\Task;
 use App\Models\TaskList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TaskListController extends Controller
 {
@@ -16,9 +19,18 @@ class TaskListController extends Controller
     {
         $id = Auth::user()->id;
         $taskLists = TaskList::where("user_id", $id)
-            ->orderBy("updated_at", "DESC")
+            ->orderBy("deadline", "ASC")
             ->get();
-        return view("tasklist.index", compact("taskLists"));
+        return view("taskList.index", compact("taskLists"));
+    }
+
+    public function finished()
+    {
+        $id = Auth::user()->id;
+        $taskLists = TaskList::where("user_id", $id)
+            ->orderBy("deadline", "ASC")
+            ->get();
+        return view("taskList.finished", compact("taskLists"));
     }
 
     /**
@@ -40,9 +52,32 @@ class TaskListController extends Controller
     {
         $userId = Auth::user()->id;
         $taskId = intval($request->task_id);
-        $taskList = TaskList::find($taskId);
+        $deadline = $request->deadline;
+        // $taskList = TaskList::find($taskId);
+        $taskList = DB::table("users_tasks")
+            ->where("user_id", $userId)
+            ->where("task_id", $taskId)
+            ->where("deadline", $deadline)
+            ->first();
 
-        if (!$taskList) {
+        $recurringTaskList = DB::table("users_recurring_tasks")
+            ->where("user_id", $userId)
+            ->where("task_id", $taskId)
+            ->where("status", "active")
+            ->first();
+
+        if ($recurringTaskList) {
+            return redirect()
+                ->route("tasks.list")
+                ->with("success", "This task is already recurring!");
+        } elseif ($taskList) {
+            return redirect()
+                ->route("tasks.list")
+                ->with(
+                    "success",
+                    "The same task with the same deadline already exists in your list!"
+                );
+        } else {
             $taskList = new TaskList();
             $taskList->user_id = $userId;
             $taskList->task_id = $taskId;
@@ -62,9 +97,10 @@ class TaskListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $userId)
+    public function show(string $id)
     {
-        $tasks = Task::where("user_id", $userId)->first();
+        $userId = Auth::user()->id;
+        $task = TaskList::where("user_id", $userId)->first();
 
         return view("taskList.show", compact("task"));
     }
@@ -75,6 +111,15 @@ class TaskListController extends Controller
     public function edit(string $id)
     {
         //
+
+        $taskList = TaskList::findOrFail($id);
+        $taskList->status = "finished";
+        $taskList->save();
+
+        // return view("taskList.index", compact("taskLists"));
+        return redirect()
+            ->route("tasklists.index")
+            ->with("success", "Your task has been successfully finished!");
     }
 
     /**
@@ -88,8 +133,12 @@ class TaskListController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        //
+        $taskList = TaskList::findOrFail($id);
+        $taskList->delete();
+        return redirect()
+            ->route("tasklists.index")
+            ->with("success", "Your task has been successfully deleted!");
     }
 }

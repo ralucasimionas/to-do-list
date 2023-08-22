@@ -25,6 +25,7 @@ return new class extends Migration {
                 ->onDelete("cascade")
                 ->unique();
             $table->integer("recurrence");
+
             $table->date("start_date");
             $table->date("finish_date");
             $table->timestamps();

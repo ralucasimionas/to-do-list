@@ -22,9 +22,12 @@
                     <x-nav-link :href="route('tasklists.index')" :active="request()->routeIs('tasklists.index')">
                        {{ __('Current TODOS') }}
                    </x-nav-link>
-                      <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                      <x-nav-link :href="route('tasklists.finished')" :active="request()->routeIs('tasklists.finished')">
                        {{ __('Finished TODOS') }}
                    </x-nav-link>
+                   <x-nav-link :href="route('recurringtasklists.index')" :active="request()->routeIs('recurringtasklists.index')">
+                    {{ __('Active Recurring Tasks') }}
+                </x-nav-link>
                    @endif
 
                    @if(Auth::user()->role==='admin')

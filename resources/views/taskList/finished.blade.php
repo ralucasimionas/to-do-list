@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-center text-dark dark:text-dark leading-tight">
-            {{ __('Current ToDO') }}
+            {{ __('Finished TODOs') }}
         </h2>
     </x-slot>
 
@@ -31,15 +31,15 @@
                                 <th scope="col" class="px-6 py-3">
                                    Deadline
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-center">
+                                <!-- <th scope="col" class="px-6 py-3 text-center">
                                     Actions
-                                 </th>
+                                 </th> -->
                                 
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($taskLists as $taskList)
-                            @if ($taskList->status === "in_progress")
+                            @if ($taskList->status === "finished")
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row"
                                         class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-white">
@@ -57,10 +57,10 @@
                                     <td class="px-6 py-4">
                                         {{ $taskList->deadline }}
                                     </td>
-                                    <td class="flex justify-evenly">
-                                   <a href="{{route('tasklists.edit', $taskList->id)}}"class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Mark as finished</a>
+                                    <!-- <td class="flex justify-evenly">
+                                 
                                    <a href="{{route('tasklists.delete', $taskList->id)}}" class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded">Delete</a>
-                                </td>
+                                </td> -->
                                 </tr>
                                 @endif
                             @endforeach

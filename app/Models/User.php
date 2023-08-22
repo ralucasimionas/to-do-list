@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(TaskList::class);
     }
+
+    public function recurrentTasks()
+    {
+        return $this->hasMany(RecurringTasks::class);
+    }
 }

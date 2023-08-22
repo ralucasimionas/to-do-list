@@ -36,10 +36,23 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        Task::create($request->validated());
-        return redirect()
-            ->route("tasks.create")
-            ->with("success", "New task successfully added!");
+        if (
+            Task::where("name", $request->name)
+                ->where("deadline", $request->deadline)
+                ->exists()
+        ) {
+            return redirect()
+                ->route("tasks.create")
+                ->with(
+                    "success",
+                    "This tasks already exists in your current list!"
+                );
+        } else {
+            Task::create($request->validated());
+            return redirect()
+                ->route("tasks.create")
+                ->with("success", "New task successfully added!");
+        }
     }
 
     /**

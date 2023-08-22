@@ -34,7 +34,7 @@
                                 <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white text-center">Make a <span class="text-black-400 font-bold underline hover:text-pink-400 ">TO DO LIST</span> and always keep track of your tasks!</h2>
 
                                 <p class="mt-12 pt-12 text-gray-500 dark:text-gray-400 text-sm leading-relaxed text-center">
-                                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
+                                    Have you ever wondered how easy it would be to have all your tasks listed in one place, so you wouldn't forget about them and finished them on time? This TO DO APP is the perfect one to keep track of them.
                                 </p>
 
 

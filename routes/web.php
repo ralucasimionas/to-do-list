@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecurringTasksController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskListController;
+use App\Models\RecurringTasks;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Profiler\Profile;
 
@@ -52,7 +54,21 @@ Route::middleware(["auth", "admin"])
 Route::middleware(["auth", "user"])
     ->prefix("/user")
     ->group(function () {
+        Route::get("/tasklists/delete/{tasklist}", [
+            TaskListController::class,
+            "delete",
+        ])->name("tasklists.delete");
+
+        Route::get("/tasklists/finished/", [
+            TaskListController::class,
+            "finished",
+        ])->name("tasklists.finished");
+        Route::get("/recurringtasklists/delete/{tasklist}", [
+            RecurringTasksController::class,
+            "delete",
+        ])->name("recurringtasklists.delete");
         Route::resource("/tasklists", TaskListController::class);
+        Route::resource("/recurringtasklists", RecurringTasksController::class);
 
         Route::get("/tasks/list", [TaskController::class, "list"])->name(
             "tasks.list"
