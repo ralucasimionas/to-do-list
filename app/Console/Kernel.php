@@ -14,12 +14,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule
-            ->call(function () {
-                new TaskReminderCron();
-            })
-            ->timezone("Europe/Bucharest")
-            ->everyMinute();
+        // $schedule
+        //     ->call(function () {
+        //         new TaskReminderCron();
+        //     })
+        //     ->timezone("Europe/Bucharest")
+        //     ->everyMinute();
     }
 
     /**
