@@ -12,10 +12,18 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $role = "user";
         $users = User::where("role", $role)->get();
+
+        $userSearch = $request->get("search");
+
+        if ($userSearch) {
+            $tasks = User::query()
+                ->where("name", "LIKE", "%" . $userSearch . "%")
+                ->get();
+        }
 
         return view("admin.user.index", compact("users"));
     }

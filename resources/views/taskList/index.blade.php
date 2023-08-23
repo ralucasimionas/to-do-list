@@ -10,6 +10,8 @@
             <div class="text-center py-3 bg-green-400 rounded-sm mx-auto">{{ session('success') }}</div>
         @endif
 
+       
+
         <div class="relative overflow-x-auto">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="flex justify-center">

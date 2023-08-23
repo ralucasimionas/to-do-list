@@ -2,24 +2,24 @@
 
 namespace App\Mail;
 
-use App\Models\TaskList;
-use Illuminate\Mail\Mailables\Address;
+use App\Models\RecurringTasks;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address as MailablesAddress;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class DeadlineReminder extends Mailable
+class RecurrentReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public TaskList $taskList)
+    public function __construct(public RecurringTasks $taskList)
     {
         //
     }
@@ -30,9 +30,10 @@ class DeadlineReminder extends Mailable
     public function envelope(): Envelope
     {
         $taskListId = $this->taskList->id;
+        $taskname = $this->taskList->task->name;
         return new Envelope(
-            from: new Address("reminder@test.com", "Due task reminder"),
-            subject: "Your task $taskListId is due today"
+            from: new Address("todolist@test.com", "Recurrent List Update"),
+            subject: "A new task `$taskname` has been added to your recurrent list!"
         );
     }
 

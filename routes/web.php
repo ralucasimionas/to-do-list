@@ -48,6 +48,16 @@ Route::middleware(["auth", "admin"])
     ->prefix("/admin")
     ->group(function () {
         Route::resource("/users", ProfileController::class);
+
+        Route::get("/tasklists/{tasklist}", [
+            TaskListController::class,
+            "showtasks",
+        ])->name("tasklists.showtasks");
+
+        Route::get("/recurrenttasklists/{tasklist}", [
+            TaskListController::class,
+            "showtasks",
+        ])->name("recurrenttasklists.showtasks");
     });
 
 ### USER ROUTES
@@ -63,6 +73,11 @@ Route::middleware(["auth", "user"])
             TaskListController::class,
             "finished",
         ])->name("tasklists.finished");
+
+        Route::get("/recurringtasklists/deactivate/{tasklist}", [
+            RecurringTasksController::class,
+            "deactivate",
+        ])->name("recurringtasklists.deactivate");
         Route::get("/recurringtasklists/delete/{tasklist}", [
             RecurringTasksController::class,
             "delete",

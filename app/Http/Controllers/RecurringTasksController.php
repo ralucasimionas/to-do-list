@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateRecurrentTaskRequest;
+use App\Mail\NewRecurrentTaskAdded;
+use App\Mail\RecurrentReminder;
 use App\Models\RecurringTasks;
 use App\Models\Task;
-use App\Models\TaskList;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class RecurringTasksController extends Controller
 {
@@ -18,8 +21,10 @@ class RecurringTasksController extends Controller
     public function index()
     {
         $id = Auth::user()->id;
+        $today = date("Y-m-d H:i:s");
         $recurringTaskLists = RecurringTasks::where("user_id", $id)
             ->where("status", "active")
+            ->where("finish_date", ">=", $today)
             ->orderBy("updated_at", "DESC")
             ->get();
         return view("recurringTaskList.index", compact("recurringTaskLists"));
@@ -40,7 +45,7 @@ class RecurringTasksController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateRecurrentTaskRequest $request)
     {
         $userId = Auth::user()->id;
         $taskId = intval($request->task_id);
@@ -55,6 +60,7 @@ class RecurringTasksController extends Controller
         $currentTaskList = DB::table("users_tasks")
             ->where("user_id", $userId)
             ->where("task_id", $taskId)
+            ->where("status", "in_progress")
             ->first();
 
         if ($currentTaskList) {
@@ -79,6 +85,10 @@ class RecurringTasksController extends Controller
             $taskList->save();
         }
 
+        Mail::to(Auth::user()->email)->send(
+            new NewRecurrentTaskAdded($taskList)
+        );
+
         return redirect()
             ->route("tasks.list")
             ->with(
@@ -98,9 +108,13 @@ class RecurringTasksController extends Controller
         return view("recurringTaskList.show", compact("recurringTask"));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    public function showtasks(string $id)
+    {
+        $tasks = RecurringTasks::where("user_id", $id)->get();
+        $user = User::where("id", $id)->first();
+
+        return view("admin.user.tasklists", compact("tasks", "user"));
+    }
 
     /**
      * Update the specified resource in storage.
@@ -117,6 +131,17 @@ class RecurringTasksController extends Controller
             );
     }
 
+    public function deactivate(string $id)
+    {
+        $taskList = RecurringTasks::findOrFail($id);
+        $taskList->status = "inactive";
+        $taskList->save();
+
+        // return view("taskList.index", compact("taskLists"));
+        return redirect()
+            ->route("recurringtasklists.index")
+            ->with("success", "Your task has been successfully deactivated !");
+    }
     /**
      * Remove the specified resource from storage.
      */

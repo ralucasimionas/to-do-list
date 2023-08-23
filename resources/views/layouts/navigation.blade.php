@@ -32,7 +32,7 @@
 
                    @if(Auth::user()->role==='admin')
                    <x-nav-link :href="route('tasks.index')" :active="request()->routeIs('tasks.index')">
-                    {{ __('Dashboard') }}
+                    {{ __('Task list') }}
                 </x-nav-link>
                    <x-nav-link :href="route('tasks.create')" :active="request()->routeIs('tasks.create')">
                       {{ __('Add Tasks') }}

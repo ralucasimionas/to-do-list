@@ -10,7 +10,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white dark:bg-white-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+                <div class="max-w-xl mb-4">
                     <form method="post" action="{{ route('recurringtasklists.update', $recurringTask->id) }}" class="mt-6 space-y-6">
                         @csrf
                         @method('put')
@@ -47,12 +47,19 @@
                     </div>
 
 
-                        <x-primary-button>{{ __('Edit recurrence') }}</x-primary-button>
+                        <x-primary-button>{{ __('Edit recurrence') }} </x-primary-button>
+                       
 
                     </form> 
+                    
 
                 </div>
+
+                <a class="my-24" href="{{ route('recurringtasklists.index') }}"><button class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">{{ __('Back to reccuring list') }}</button></a>
+                
             </div>
+
+            
         </div>
     </div>
 </x-app-layout>

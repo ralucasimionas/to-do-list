@@ -43,7 +43,7 @@
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     <th scope="row"
                                         class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-white">
-                                        <a href={{ route('tasklists.show', $taskList->id) }}>{{ $taskList->id }}</a>
+                                        <p href={{ route('tasklists.show', $taskList->id) }}>{{ $taskList->id }}</p>
                                     </th>
                                     <td class="px-6 py-4">
                                         {{ $taskList->task->name  }} <span class="font-bold"></span>

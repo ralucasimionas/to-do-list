@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-black text-center dark:text-blackleading-tight">
+        <h2 class="font-semibold text-xl text-black text-center dark:text-blackleading-tight text-center">
             {{ __($user->name) }}
         </h2>
     </x-slot>

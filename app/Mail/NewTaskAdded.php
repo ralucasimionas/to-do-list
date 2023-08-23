@@ -3,16 +3,15 @@
 namespace App\Mail;
 
 use App\Models\TaskList;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address as MailablesAddress;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class DeadlineReminder extends Mailable
+class NewTaskAdded extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,10 +28,11 @@ class DeadlineReminder extends Mailable
      */
     public function envelope(): Envelope
     {
-        $taskListId = $this->taskList->id;
+        $taskId = $this->taskList->id;
+        $taskname = $this->taskList->task->name;
         return new Envelope(
-            from: new Address("reminder@test.com", "Due task reminder"),
-            subject: "Your task $taskListId is due today"
+            from: new Address("todolist@test.com", "todolist Update"),
+            subject: "Task $taskname has been added to your list!"
         );
     }
 
@@ -41,7 +41,7 @@ class DeadlineReminder extends Mailable
      */
     public function content(): Content
     {
-        return new Content(view: "emails.notification");
+        return new Content(view: "emails.tasklistupdate");
     }
 
     /**

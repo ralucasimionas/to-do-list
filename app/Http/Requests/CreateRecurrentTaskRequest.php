@@ -23,8 +23,8 @@ class CreateRecurrentTaskRequest extends FormRequest
     {
         return [
             "recurrence" => "required",
-            "start_date" => "required",
-            "finish_date" => "required",
+            "start_date" => "required|date|after:today",
+            "finish_date" => "required|date|after:start_date",
         ];
     }
 }

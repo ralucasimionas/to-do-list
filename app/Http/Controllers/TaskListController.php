@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\DeadlineReminder;
+use App\Mail\NewTaskAdded;
 use App\Models\Task;
 use App\Models\TaskList;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +18,13 @@ class TaskListController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $id = Auth::user()->id;
         $taskLists = TaskList::where("user_id", $id)
             ->orderBy("deadline", "ASC")
             ->get();
+
         return view("taskList.index", compact("taskLists"));
     }
 
@@ -28,11 +32,11 @@ class TaskListController extends Controller
     {
         $id = Auth::user()->id;
         $taskLists = TaskList::where("user_id", $id)
+            ->where("status", "finished")
             ->orderBy("deadline", "ASC")
             ->get();
         return view("taskList.finished", compact("taskLists"));
     }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -86,6 +90,7 @@ class TaskListController extends Controller
             $taskList->save();
         }
 
+        Mail::to(Auth::user()->email)->send(new NewTaskAdded($taskList));
         return redirect()
             ->route("tasks.list")
             ->with(
@@ -105,6 +110,14 @@ class TaskListController extends Controller
         return view("taskList.show", compact("task"));
     }
 
+    public function showtasks(string $id)
+    {
+        $tasks = TaskList::where("user_id", $id)->get();
+        $user = User::where("id", $id)->first();
+
+        return view("admin.user.tasklists", compact("tasks", "user"));
+    }
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -119,7 +132,7 @@ class TaskListController extends Controller
         // return view("taskList.index", compact("taskLists"));
         return redirect()
             ->route("tasklists.index")
-            ->with("success", "Your task has been successfully finished!");
+            ->with("success", "Your task has been successfully finished !");
     }
 
     /**

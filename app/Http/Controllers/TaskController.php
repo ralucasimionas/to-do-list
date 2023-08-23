@@ -11,15 +11,31 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $tasks = Task::all();
+
+        $taskSearch = $request->get("search");
+
+        if ($taskSearch) {
+            $tasks = Task::query()
+                ->where("name", "LIKE", "%" . $taskSearch . "%")
+                ->get();
+        }
         return view("task.index", compact("tasks"));
     }
 
-    public function list()
+    public function list(Request $request)
     {
         $tasks = Task::all();
+
+        $taskSearch = $request->get("search");
+
+        if ($taskSearch) {
+            $tasks = Task::query()
+                ->where("name", "LIKE", "%" . $taskSearch . "%")
+                ->get();
+        }
         return view("task.list", compact("tasks"));
     }
 
@@ -36,11 +52,7 @@ class TaskController extends Controller
      */
     public function store(CreateTaskRequest $request)
     {
-        if (
-            Task::where("name", $request->name)
-                ->where("deadline", $request->deadline)
-                ->exists()
-        ) {
+        if (Task::where("name", $request->name)->exists()) {
             return redirect()
                 ->route("tasks.create")
                 ->with(
